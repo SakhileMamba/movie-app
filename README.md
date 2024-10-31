@@ -1,5 +1,7 @@
 # movie-app
 
+[https://67240d1acf93576856030b7c--mamba-movie-app.netlify.app](https://67240d1acf93576856030b7c--mamba-movie-app.netlify.app/)
+
 ## Description
 
 WDD 330 final project: the movie-app web application. A simple web app with Vite support to bundle up our assets.
