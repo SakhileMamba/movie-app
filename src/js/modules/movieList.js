@@ -3,7 +3,7 @@ import { config } from "../config.js";
 export class MovieList {
     constructor() {
         this.moviesGrid = document.getElementById("moviesGrid");
-
+        let btnExists = false;
         this.currentPage = 1;
         this.currentSearchTerm = "";
         this.currentFilter = "popular";
@@ -38,7 +38,7 @@ export class MovieList {
         }
     }
 
-    async loadMovies(clearExisting = true) {
+    async loadMovies(clearExisting = false) {
         if (this.isLoading) return;
 
         this.isLoading = true;
@@ -47,15 +47,19 @@ export class MovieList {
         try {
             const movies = await this.fetchMovies();
             await this.displayMovies(movies, clearExisting);
-            let loadMoreBtn = await this.createLoadMoreButton();
 
-            this.moviesGrid.parentElement.appendChild(loadMoreBtn);
-            document.getElementById("load-more-btn").addEventListener("click", () => {
-                if (!this.isLoading) {
-                    this.currentPage++;
-                    this.loadMovies(false);
-                }
-            })
+            if (!this.btnExists) {
+                this.btnExists = true;
+                let loadMoreBtn = await this.createLoadMoreButton();
+                this.moviesGrid.parentElement.appendChild(loadMoreBtn);
+                document.getElementById("load-more-btn").addEventListener("click", () => {
+                    if (!this.isLoading) {
+                        this.currentPage++;
+                        this.loadMovies(false);
+                    }
+                })
+            }
+
         } catch (error) {
             console.error("Error loading movies:", error);
             this.displayError("Failed to load movies");
@@ -116,7 +120,45 @@ export class MovieList {
         }
     }*/
 
-    async displayMovies(movies) {
+    displayMovies(movies, clearExisting) {
+        if (!this.moviesGrid) return;
+
+        if (clearExisting) {
+            this.moviesGrid.innerHTML = "";
+        }
+
+        const watchlist = JSON.parse(localStorage.getItem("watchlist") || "[]");
+
+        const movieElements = movies.map(movie => `
+            <div class="movie-card" data-id="${movie.id}">
+                <img 
+                    src="${movie.poster_path
+                ? config.imageBaseUrl + movie.poster_path
+                : "https://via.placeholder.com/300x450"}"
+                    alt="${movie.title}"
+                    class="movie-poster"
+                    loading="lazy"
+                >
+                <div class="movie-info">
+                    <h3 class="movie-title">${movie.title}</h3>
+                    <p class="movie-year">${movie.release_date?.split("-")[0] || "N/A"}</p>
+                    <button class="watchlist-btn ${watchlist.includes(movie.id.toString()) ? "in-watchlist" : ""}" 
+                            data-id="${movie.id}">
+                        ${watchlist.includes(movie.id.toString()) ? "Remove from Watchlist" : "Add to Watchlist"}
+                    </button>
+                </div>
+            </div>
+        `).join("");
+
+        if (clearExisting && movies.length === 0) {
+            this.displayNoResults();
+        } else {
+            this.moviesGrid.insertAdjacentHTML("beforeend", movieElements);
+            this.addMovieCardListeners();
+        }
+    }
+
+    /*async displayMovies(movies) {
         if (!this.moviesGrid) return;
 
         this.moviesGrid.innerHTML = await movies.map(movie => `
@@ -131,15 +173,18 @@ export class MovieList {
                 <div class="movie-info">
                     <h3 class="movie-title">${movie.title}</h3>
                     <p class="movie-year">${movie.release_date?.split("-")[0] || "N/A"}</p>
+
+
+                    
                     <button class="watchlist-btn" data-id="${movie.id}">
-                        ${this.isInWatchlist(movie.id) ? "♥" : "♡"}
+                        ${this.isInWatchlist(movie.id) ? "❤️" : "🖤"}
                     </button>
                 </div>
             </div>
         `).join("");
         this.addMovieCardListeners();
 
-    }
+    }*/
 
     addMovieCardListeners() {
         const movieCards = document.querySelectorAll(".movie-card");
@@ -174,10 +219,10 @@ export class MovieList {
 
         if (index === -1) {
             watchlist.push(movieId.toString());
-            button.textContent = "♥";
+            button.textContent = "❤️";
         } else {
             watchlist.splice(index, 1);
-            button.textContent = "♡";
+            button.textContent = "🖤";
         }
 
         localStorage.setItem("watchlist", JSON.stringify(watchlist));
