@@ -142,9 +142,12 @@ export class MovieList {
                 <div class="movie-info">
                     <h3 class="movie-title">${movie.title}</h3>
                     <p class="movie-year">${movie.release_date?.split("-")[0] || "N/A"}</p>
-                    <button class="watchlist-btn ${watchlist.includes(movie.id.toString()) ? "in-watchlist" : ""}" 
+                    <!-- <button class="watchlist-btn ${watchlist.includes(movie.id.toString()) ? "in-watchlist" : ""}" 
                             data-id="${movie.id}">
                         ${watchlist.includes(movie.id.toString()) ? "Remove from Watchlist" : "Add to Watchlist"}
+                    </button>  -->
+                    <button class="watchlist-btn" data-id="${movie.id}">
+                        ${this.isInWatchlist(movie.id) ? "❤️" : "🖤"}
                     </button>
                 </div>
             </div>
