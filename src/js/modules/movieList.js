@@ -66,6 +66,7 @@ export class MovieList {
     }
 
     async fetchMovies() {
+        console.log(config.apiKey)
         let url;
         if (this.currentSearchTerm) {
             url = `${config.baseUrl}/search/movie?api_key=${config.apiKey}&query=${encodeURIComponent(this.currentSearchTerm)}&page=${this.currentPage}`;
