@@ -99,7 +99,7 @@ export class Watchlist {
 
     displayEmptyState() {
         if (this.watchlistGrid) {
-            this.watchlistGrid.innerHTML = `
+            this.watchlistGrid.parentElement.innerHTML = `
                 <div class="empty-watchlist">
                     <h2>Your watchlist is empty</h2>
                     <p>Start adding movies from the home page!</p>
