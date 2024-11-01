@@ -102,8 +102,8 @@ select {
 
 .movie-poster {
   width: 100%;
-  aspect-ratio: 2/3;
-  object-fit: cover;
+  /*aspect-ratio: 2/3;*/
+  /*object-fit: cover;*/
 }
 
 .movie-info {
@@ -282,6 +282,6 @@ select {
   }
 
   .movie-poster {
-    max-width: 200px;
+    /*max-width: 200px;*/
   }
 }
