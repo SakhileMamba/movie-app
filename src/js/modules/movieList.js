@@ -49,7 +49,7 @@ export class MovieList {
             await this.displayMovies(movies, clearExisting);
             let loadMoreBtn = await this.createLoadMoreButton();
 
-            this.moviesGrid.appendChild(loadMoreBtn);
+            this.moviesGrid.parentElement.appendChild(loadMoreBtn);
             document.getElementById("load-more-btn").addEventListener("click", () => {
                 if (!this.isLoading) {
                     this.currentPage++;
@@ -66,7 +66,6 @@ export class MovieList {
     }
 
     async fetchMovies() {
-        console.log(config.apiKey)
         let url;
         if (this.currentSearchTerm) {
             url = `${config.baseUrl}/search/movie?api_key=${config.apiKey}&query=${encodeURIComponent(this.currentSearchTerm)}&page=${this.currentPage}`;
@@ -76,8 +75,6 @@ export class MovieList {
 
         const response = await fetch(url);
         const data = await response.json();
-        console.log(data);
-        console.log(this.loadMoreBtn)
 
         // Update load more button visibility
         //this.loadMoreBtn.style.display = this.currentPage < data.total_pages ? "block" : "none";
