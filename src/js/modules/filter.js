@@ -44,7 +44,8 @@ export class Filter {
 
             const response = await fetch(url);
             const data = await response.json();
-            this.movieList.displayMovies(data.results);
+            // this.movieList.clear = true;
+            this.movieList.displayMovies(data.results, true);
         } catch (error) {
             console.error("Error applying filters:", error);
             this.movieList.displayError("Failed to filter movies");

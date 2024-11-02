@@ -3,7 +3,8 @@ import { config } from "../config.js";
 export class MovieList {
     constructor() {
         this.moviesGrid = document.getElementById("moviesGrid");
-        let btnExists = false;
+        this.btnExists = false;
+        this.clear = true;
         this.currentPage = 1;
         this.currentSearchTerm = "";
         this.currentFilter = "popular";
@@ -15,9 +16,6 @@ export class MovieList {
         button.className = "load-more-btn";
         button.id = "load-more-btn"
         button.textContent = "Load More";
-        //button.style.display = "none";
-        //this.moviesGrid.appendChild(button);
-        console.log("Help!");
         return button;
     }
 
@@ -38,7 +36,7 @@ export class MovieList {
         }
     }
 
-    async loadMovies(clearExisting = false) {
+    async loadMovies(clearExisting = this.clear) {
         if (this.isLoading) return;
 
         this.isLoading = true;
@@ -71,6 +69,7 @@ export class MovieList {
 
     async fetchMovies() {
         let url;
+        console.log("fetch from load()" + this.currentSearchTerm)
         if (this.currentSearchTerm) {
             url = `${config.baseUrl}/search/movie?api_key=${config.apiKey}&query=${encodeURIComponent(this.currentSearchTerm)}&page=${this.currentPage}`;
         } else {
@@ -79,46 +78,8 @@ export class MovieList {
 
         const response = await fetch(url);
         const data = await response.json();
-
-        // Update load more button visibility
-        //this.loadMoreBtn.style.display = this.currentPage < data.total_pages ? "block" : "none";
-
         return data.results;
     }
-
-    /*async loadMovies(clearExisting = true) {
-        if (this.isLoading) return;
-
-        this.isLoading = true;
-        this.showLoader(clearExisting);
-
-        try {
-            const movies = await this.fetchMovies();
-            this.displayMovies(movies, clearExisting);
-        } catch (error) {
-            console.error("Error loading movies:", error);
-            this.displayError("Failed to load movies");
-        } finally {
-            this.hideLoader();
-            this.isLoading = false;
-        }
-    }
-
-
-
-    async loadPopularMovies() {
-        try {
-            const response = await fetch(
-                `${config.baseUrl}/movie/popular?api_key=${config.apiKey}&language=en-US&page=1`
-            );
-            const data = await response.json();
-            this.displayMovies(data.results);
-
-        } catch (error) {
-            console.error("Error loading popular movies:", error);
-            this.displayError("Failed to load movies");
-        }
-    }*/
 
     displayMovies(movies, clearExisting) {
         if (!this.moviesGrid) return;
@@ -161,33 +122,6 @@ export class MovieList {
         }
     }
 
-    /*async displayMovies(movies) {
-        if (!this.moviesGrid) return;
-
-        this.moviesGrid.innerHTML = await movies.map(movie => `
-            <div class="movie-card" data-id="${movie.id}">
-                <img 
-                    src="${movie.poster_path
-                ? config.imageBaseUrl + movie.poster_path
-                : "https://via.placeholder.com/300x450"}"
-                    alt="${movie.title}"
-                    class="movie-poster"
-                >
-                <div class="movie-info">
-                    <h3 class="movie-title">${movie.title}</h3>
-                    <p class="movie-year">${movie.release_date?.split("-")[0] || "N/A"}</p>
-
-
-                    
-                    <button class="watchlist-btn" data-id="${movie.id}">
-                        ${this.isInWatchlist(movie.id) ? "❤️" : "🖤"}
-                    </button>
-                </div>
-            </div>
-        `).join("");
-        this.addMovieCardListeners();
-
-    }*/
 
     addMovieCardListeners() {
         const movieCards = document.querySelectorAll(".movie-card");

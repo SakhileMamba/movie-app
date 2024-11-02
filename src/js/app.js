@@ -6,7 +6,7 @@ import { Watchlist } from "./modules/watchlist.js";
 class App {
     constructor() {
         this.movieList = new MovieList();
-        this.search = new Search();
+        this.search = new Search(this.movieList);
         this.filter = new Filter();
         this.watchlist = new Watchlist();
         this.init();
@@ -17,6 +17,7 @@ class App {
         const searchInput = document.getElementById("searchInput");
         searchInput?.addEventListener("input", (e) => {
             if (e.target.value) {
+                console.log(e.target.value)
                 this.search.searchMovies(e.target.value);
             } else {
                 //this.movieList.loadPopularMovies();
