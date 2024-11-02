@@ -7,7 +7,7 @@ class App {
     constructor() {
         this.movieList = new MovieList();
         this.search = new Search(this.movieList);
-        this.filter = new Filter();
+        this.filter = new Filter(this.movieList);
         this.watchlist = new Watchlist();
         this.init();
     }

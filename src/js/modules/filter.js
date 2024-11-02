@@ -2,8 +2,8 @@ import { config } from "../config.js";
 import { MovieList } from "./movieList.js";
 
 export class Filter {
-    constructor() {
-        this.movieList = new MovieList();
+    constructor(movieList) {
+        this.movieList = /*new MovieList()*/ movieList;
         this.genreFilter = document.getElementById("genreFilter");
         this.sortBy = document.getElementById("sortBy");
     }
@@ -32,11 +32,15 @@ export class Filter {
     async applyFilters() {
         if (!this.genreFilter || !this.sortBy) return;
 
-        const genreId = this.genreFilter.value;
-        const sortBy = this.sortBy.value;
+        //const genreId = this.genreFilter.value;
+        //const sortBy = this.sortBy.value;
+
+        this.movieList.genreId = this.genreFilter.value;
+        this.movieList.sortBy = this.sortBy.value;
+
 
         try {
-            let url = `${config.baseUrl}/discover/movie?api_key=${config.apiKey}&language=en-US&sort_by=${sortBy}&page=1`;
+            /*let url = `${config.baseUrl}/discover/movie?api_key=${config.apiKey}&language=en-US&sort_by=${sortBy}&page=1`;
 
             if (genreId) {
                 url += `&with_genres=${genreId}`;
@@ -44,8 +48,9 @@ export class Filter {
 
             const response = await fetch(url);
             const data = await response.json();
-            // this.movieList.clear = true;
-            this.movieList.displayMovies(data.results, true);
+            // this.movieList.clear = true;*/
+            const movies = await this.movieList.fetchMovies();
+            this.movieList.displayMovies(/*data.results*/ movies, true);
         } catch (error) {
             console.error("Error applying filters:", error);
             this.movieList.displayError("Failed to filter movies");

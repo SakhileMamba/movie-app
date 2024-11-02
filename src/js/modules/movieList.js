@@ -9,6 +9,8 @@ export class MovieList {
         this.currentSearchTerm = "";
         this.currentFilter = "popular";
         this.isLoading = false;
+        this.genreId = "";
+        this.sortBy = "";
     }
 
     async createLoadMoreButton() {
@@ -72,7 +74,15 @@ export class MovieList {
         console.log("fetch from load()" + this.currentSearchTerm)
         if (this.currentSearchTerm) {
             url = `${config.baseUrl}/search/movie?api_key=${config.apiKey}&query=${encodeURIComponent(this.currentSearchTerm)}&page=${this.currentPage}`;
-        } else {
+        } else if (this.sortBy) {
+            url = `${config.baseUrl}/discover/movie?api_key=${config.apiKey}&language=en-US&sort_by=${this.sortBy}&page=1`;
+
+            if (this.genreId) {
+                url += `&with_genres=${this.genreId}`;
+            }
+        }
+
+        else {
             url = `${config.baseUrl}/movie/${this.currentFilter}?api_key=${config.apiKey}&page=${this.currentPage}`;
         }
 

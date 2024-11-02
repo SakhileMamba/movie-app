@@ -1,5 +1,5 @@
-import { config } from "../config.js";
-import { MovieList } from "./movieList.js";
+//import { config } from "../config.js";
+//import { MovieList } from "./movieList.js";
 
 export class Search {
     constructor(movieList) {
